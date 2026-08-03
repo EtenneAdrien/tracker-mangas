@@ -3,7 +3,7 @@ import { rechercherTitres } from '../lib/jikan'
 import type { ResultatJikan } from '../lib/jikan'
 import { supabase } from '../lib/supabase'
 
-export default function Recherche() {
+export default function Recherche({ onAjout }: { onAjout: () => void }) {
   const [recherche, setRecherche] = useState('')
   const [type, setType] = useState<'anime' | 'manga'>('anime')
   const [resultats, setResultats] = useState<ResultatJikan[]>([])
@@ -52,6 +52,7 @@ export default function Recherche() {
     }
 
     setAjoutes([...ajoutes, resultat.mal_id])
+    onAjout()
   }
 
   return (

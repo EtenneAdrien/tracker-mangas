@@ -12,7 +12,7 @@ type Titre = {
   note: number | null
 }
 
-export default function MaListe() {
+export default function MaListe({ rafraichir }: { rafraichir: number }) {
   const [titres, setTitres] = useState<Titre[]>([])
   const [chargement, setChargement] = useState(true)
   const [erreur, setErreur] = useState('')
@@ -35,8 +35,8 @@ export default function MaListe() {
   }
 
   useEffect(() => {
-    chargerTitres()
-  }, [])
+  chargerTitres()
+}, [rafraichir])
 
   if (chargement) {
     return <p>Chargement de ta liste...</p>

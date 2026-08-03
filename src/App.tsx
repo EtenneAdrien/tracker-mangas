@@ -8,6 +8,7 @@ import MaListe from './components/MaListe'
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
   const [chargement, setChargement] = useState(true)
+  const [rafraichir, setRafraichir] = useState(0)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -41,8 +42,8 @@ export default function App() {
       <h1>Tracker Mangas</h1>
       <p>Connecté en tant que {session.user.email}</p>
       <button onClick={deconnexion}>Se déconnecter</button>
-      <Recherche />
-      <MaListe />
+      <Recherche onAjout={() => setRafraichir(rafraichir + 1)} />
+      <MaListe rafraichir={rafraichir} />
     </div>
   )
 }
