@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { rechercherTitres } from '../lib/jikan'
 import type { ResultatJikan } from '../lib/jikan'
+import { supabase } from '../lib/supabase'
 
 export default function Recherche() {
   const [recherche, setRecherche] = useState('')
@@ -9,6 +10,7 @@ export default function Recherche() {
   const [chargement, setChargement] = useState(false)
   const [erreur, setErreur] = useState('')
   const [rechercheEffectuee, setRechercheEffectuee] = useState(false)
+  const [ajoutes, setAjoutes] = useState<number[]>([])
 
   async function lancerRecherche() {
     if (recherche.trim() === '') return
@@ -26,6 +28,30 @@ export default function Recherche() {
 
     setChargement(false)
     setRechercheEffectuee(true)
+  }
+
+  async function ajouterTitre(resultat: ResultatJikan) {
+    const { data: utilisateur } = await supabase.auth.getUser()
+
+    if (!utilisateur.user) {
+      setErreur("Tu dois être connecté pour ajouter un titre.")
+      return
+    }
+
+    const { error } = await supabase.from('titres').insert({
+      user_id: utilisateur.user.id,
+      mal_id: resultat.mal_id,
+      titre: resultat.titre,
+      image_url: resultat.image_url,
+      type: resultat.type,
+    })
+
+    if (error) {
+      setErreur("Impossible d'ajouter ce titre : " + error.message)
+      return
+    }
+
+    setAjoutes([...ajoutes, resultat.mal_id])
   }
 
   return (
@@ -61,6 +87,11 @@ export default function Recherche() {
           <li key={r.mal_id}>
             {r.image_url && <img src={r.image_url} alt={r.titre} width="60" />}
             <span>{r.titre}</span>
+            {ajoutes.includes(r.mal_id) ? (
+              <span>Ajouté</span>
+            ) : (
+              <button onClick={() => ajouterTitre(r)}>Ajouter à ma liste</button>
+            )}
           </li>
         ))}
       </ul>
