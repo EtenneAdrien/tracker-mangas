@@ -83,19 +83,19 @@ export default function Recherche({ onAjout }: { onAjout: () => void }) {
         <p>Aucun résultat pour cette recherche.</p>
       )}
 
-      <ul>
-        {resultats.map((r) => (
-          <li key={r.mal_id}>
-            {r.image_url && <img src={r.image_url} alt={r.titre} width="60" />}
-            <span>{r.titre}</span>
-            {ajoutes.includes(r.mal_id) ? (
-              <span>Ajouté</span>
-            ) : (
-              <button onClick={() => ajouterTitre(r)}>Ajouter à ma liste</button>
-            )}
-          </li>
-        ))}
-      </ul>
+      <ul className="grille">
+  {resultats.map((r) => (
+    <li key={r.mal_id} className="carte">
+      {r.image_url && <img src={r.image_url} alt={r.titre} />}
+      <span className="carte-titre">{r.titre}</span>
+      {ajoutes.includes(r.mal_id) ? (
+        <span className="carte-infos">Ajouté à ta liste</span>
+      ) : (
+        <button onClick={() => ajouterTitre(r)}>Ajouter</button>
+      )}
+    </li>
+  ))}
+</ul>
     </div>
   )
 }

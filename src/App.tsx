@@ -4,6 +4,7 @@ import { supabase } from './lib/supabase'
 import Auth from './components/Auth'
 import Recherche from './components/Recherche'
 import MaListe from './components/MaListe'
+import './App.css'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
